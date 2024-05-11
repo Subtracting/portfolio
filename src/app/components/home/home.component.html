@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap');
+  </style>
+
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+  </head>
+  <body>
+    <div class="container" [style]="backgroundStyles['bgMode']">
+      <div class="header">
+        <div class="titleCanvas">
+          <canvas #titleCanvas></canvas>
+        </div>
+        <header class="border-animate">
+          <!--<h1>Subtracting<span class="pulse">_</span></h1>-->
+          <div class="subheader">
+            <p>Portfolio of Jan-Willem van der Boom</p>
+            <p>Artist / Data Analyst / Developer</p>
+          </div>
+        </header>
+        <div class="links">
+          <li [class.active] = "selectedItem === 'home'" (click) = "selectItem('home')">Home</li>
+          <li [class.active] = "selectedItem === 'art'" (click) = "selectItem('art')">Art</li>
+          <li [class.active] = "selectedItem === 'projects'" (click) = "selectItem('projects')">projects</li>
+          <li [class.active] = "selectedItem === 'about'" (click) = "selectItem('about')">About</li>
+        </div>
+
+      </div>
+      <div class="gridCanvas">
+        <canvas #gridCanvas></canvas>
+      </div>
+
+
+    </div>
+
+    <div class="text-container" *ngIf="selectedItem === 'art'">
+      <app-art></app-art>
+    </div>
+    <div class="projects-container" *ngIf="selectedItem === 'projects'">
+      <app-projects></app-projects>
+    </div>
+    <div class="projects-container" *ngIf="selectedItem === 'about'">
+      <app-about></app-about>
+    </div>
+  </body>
+</html>
