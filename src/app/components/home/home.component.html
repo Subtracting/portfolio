@@ -11,41 +11,40 @@
     <title>Portfolio</title>
   </head>
   <body>
-    <div class="container" [style]="backgroundStyles['bgMode']">
+    <div class="canvas-container">
+      <canvas #gridCanvas></canvas>
+    </div>
+
       <div class="header">
         <div class="titleCanvas">
           <canvas #titleCanvas></canvas>
         </div>
-        <header class="border-animate">
-          <!--<h1>Subtracting<span class="pulse">_</span></h1>-->
-          <div class="subheader">
-            <p>Portfolio of Jan-Willem van der Boom</p>
-            <p>Artist / Data Analyst / Developer</p>
-          </div>
-        </header>
+        <div class="subheader">
+          <p>Portfolio of Jan-Willem van der Boom</p>
+          <p>Artist / Data Analyst / Developer</p>
+        </div>
         <div class="links">
           <li [class.active] = "selectedItem === 'home'" (click) = "selectItem('home')">Home</li>
           <li [class.active] = "selectedItem === 'art'" (click) = "selectItem('art')">Art</li>
-          <li [class.active] = "selectedItem === 'projects'" (click) = "selectItem('projects')">projects</li>
+          <li [class.active] = "selectedItem === 'projects'" (click) = "selectItem('projects')">Projects</li>
           <li [class.active] = "selectedItem === 'about'" (click) = "selectItem('about')">About</li>
         </div>
 
       </div>
-      <div class="gridCanvas">
-        <canvas #gridCanvas></canvas>
+    <div class="wrapper">
+    </div>
+    <div class="container">
+      <div class="content" *ngIf="selectedItem === 'art'">
+        <app-art></app-art>
       </div>
+      <div class="projects-container" *ngIf="selectedItem === 'projects'">
+        <app-projects></app-projects>
+      </div>
+      <div class="projects-container" *ngIf="selectedItem === 'about'">
+        <app-about></app-about>
 
-
+      </div>
     </div>
 
-    <div class="text-container" *ngIf="selectedItem === 'art'">
-      <app-art></app-art>
-    </div>
-    <div class="projects-container" *ngIf="selectedItem === 'projects'">
-      <app-projects></app-projects>
-    </div>
-    <div class="projects-container" *ngIf="selectedItem === 'about'">
-      <app-about></app-about>
-    </div>
   </body>
 </html>

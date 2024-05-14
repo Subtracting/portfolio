@@ -35,12 +35,6 @@ export class HomeComponent {
 
   context2: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
 
-  backgroundStyles: { [key: string]: any } = {
-    'background': 'rgba(0,0,0,1)',
-    'bgMode': 'color: #8b8b8b',
-    'bgModeGradient': '0'
-  };
-
   ngOnInit() {
   }
 

@@ -1,34 +1,46 @@
-
-body {
+html, body {
   font-family: 'Ubuntu Mono', monospace;
   font-size: 20px;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  background-color: #101010;
-  z-index:-4;
+  margin: 0;
+}
+
+.container {
+  z-index: 0;
+  float:left;
+  clear:left;
+  margin: 40px
+}
+
+.wrapper {
 }
 
 .header {
-  height: auto;
-  padding:40px;
+  position: relative;
   float: left;
+  z-index: 1;
+  height: auto;
+  width: auto;
+  padding: 40px;
   margin: 40px;
   background-color: #121212;
-  z-index:2;
 }
 
-h1 {
-  margin: 0px;
-}
-
-.titleCanvas {
-  align-content:center;
-}
-
-.gridCanvas {
+.canvas-container {
   position: absolute;
   z-index: -1;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+gridCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .subheader {
@@ -36,30 +48,23 @@ h1 {
   border-bottom: 4px solid #101010;
 }
 
+
+
 li {
-    text-decoration:none;
-    list-style-type: none;
+  text-decoration:none;
+  list-style-type: none;
 }
 
 li:hover {
     color: white;
 }
 
+h1 {
+  margin: 0px;
+}
+
 .links {
   margin: 10px;
 }
 
-.container {
-  height: 100%;
-  width: 100%;
-}
-
-.left-div {
-}
-
-.right-div {
-  float: left;
-  margin: 20px;
-  background-color: #121212;
-}
 
