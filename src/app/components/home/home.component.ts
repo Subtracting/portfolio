@@ -20,7 +20,7 @@ export class HomeComponent {
   appearVarX: number = 0;
   appearVarY: number = 0;
   startX: number = 700;
-  startY: number = Math.random() * 1000;
+  startY: number = Math.random() * 600;
   followArray: Array<{ x: number, y: number }> = [
     {x: 500, y: 500},
     {x: 1200, y: 200},
@@ -78,7 +78,7 @@ export class HomeComponent {
       const y = startY + distance ;
       this.points.push({ x, y });
     }
-      for (var i = 0; i < 10000; i ++) {
+      for (var i = 0; i < 1000; i ++) {
         const x = Math.random() * this.context2.canvas.width;
         const y = Math.random() * this.context2.canvas.height;
         this.points.push({ x, y });
@@ -156,9 +156,10 @@ export class HomeComponent {
         }
 
       }
-      this.movePoints(this.followArray);
     }
     , 10);
+
+  this.movePoints(this.followArray);
 
   }
 
