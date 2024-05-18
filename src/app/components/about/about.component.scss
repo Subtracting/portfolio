@@ -1,0 +1,20 @@
+.about {
+  position: relative;
+  float: left;
+  z-index: 1;
+  height: auto;
+  width: 33vw;
+  padding: 40px;
+  background-color: rgba(18, 18, 18, 0.9);
+  left: -100%;
+  opacity: 0;
+  animation: smooth-appear 1s ease forwards;
+}
+
+@keyframes smooth-appear {
+  to {
+    left: 0px;
+    opacity: 1;
+  }
+}
+
