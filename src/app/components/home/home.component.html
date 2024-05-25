@@ -11,9 +11,10 @@
     <title>Portfolio</title>
   </head>
   <body>
-    <div class="canvas-container">
-      <canvas #gridCanvas></canvas>
-    </div>
+    <div class="main">
+      <div class="canvas-container">
+        <canvas #gridCanvas></canvas>
+      </div>
 
       <div class="header">
         <div class="titleCanvas">
@@ -31,20 +32,21 @@
         </div>
 
       </div>
-    <div class="wrapper">
-    </div>
-    <div class="container">
-      <div class="content" *ngIf="selectedItem === 'art'">
-        <app-art></app-art>
+      <div class="wrapper">
       </div>
-      <div class="projects-container" *ngIf="selectedItem === 'projects'">
-        <app-projects></app-projects>
-      </div>
-      <div class="projects-container" *ngIf="selectedItem === 'about'">
-        <app-about></app-about>
+      <div class="container">
+        <div class="content" *ngIf="selectedItem === 'art'">
+          <app-art></app-art>
+        </div>
+        <div class="projects-container" *ngIf="selectedItem === 'projects'">
+          <app-projects></app-projects>
+        </div>
+        <div class="projects-container" *ngIf="selectedItem === 'about'">
+          <app-about></app-about>
 
+        </div>
       </div>
-    </div>
 
+    </div>
   </body>
 </html>

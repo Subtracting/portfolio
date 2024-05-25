@@ -1,5 +1,5 @@
 import { Component, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { interval } from 'rxjs';
+import { fromEvent, interval, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -30,10 +30,16 @@ export class HomeComponent {
     {x: 750, y: 500}
   ];
 
-  word: string = "SUBTRACTING.";
+  word: string = "subtracting.";
   points: Array<{ x: number, y: number }> = [];
-  rotation: number = 0;
+  rotation: number = 100;
   direction: number = 1;
+  randomVar: number = Math.random();
+
+  resizeObservable!: Observable<Event>;
+  resizeSubscription!: Subscription;
+  width!: number;
+  height!: number;
 
   @ViewChild('titleCanvas', { static: false, read: ElementRef})
   titleCanvas!: ElementRef;
@@ -46,6 +52,13 @@ export class HomeComponent {
   context2: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
 
   ngOnInit() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.resizeObservable = fromEvent(window, 'resize');
+    this.resizeSubscription = this.resizeObservable.subscribe(_ => {
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+    })
   }
 
   ngAfterViewInit(): void {
@@ -58,8 +71,8 @@ export class HomeComponent {
 
     if (this.gridCanvas && this.gridCanvas.nativeElement) {
       this.context2 = this.gridCanvas.nativeElement.getContext("2d");
-      this.context2.canvas.height = window.innerHeight;
-      this.context2.canvas.width = window.innerWidth;
+      this.context2.canvas.height = this.height;
+      this.context2.canvas.width = this.width;
       this.generatePoints(this.startX, this.startY);
       this.animateGrid();
       this.changeDirection();
@@ -67,18 +80,24 @@ export class HomeComponent {
 
   }
 
+  ngOnDestroy() {
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
+    }
+  }
+
   generatePoints(startX: number, startY: number) {
     const count = 10000;
     const radius = this.context2.canvas.width;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 10000; i++) {
       const angle = Math.random() * 2 * Math.PI;
       const distance = 10 + Math.random() * radius;
       const x = startX + distance * Math.tan(angle);
       const y = startY + distance ;
       this.points.push({ x, y });
     }
-      for (var i = 0; i < 1000; i ++) {
+      for (var i = 0; i < 10000; i ++) {
         const x = Math.random() * this.context2.canvas.width;
         const y = Math.random() * this.context2.canvas.height;
         this.points.push({ x, y });
@@ -88,8 +107,9 @@ export class HomeComponent {
 
   movePoints(followArray: Array<{ x: number, y: number }>) {
     const newPoints: Array<{ x:number, y: number }> = [];
-    let toX = 0;
-    let toY = 0;
+    let toDx = 0;
+    let toDy = 0;
+    let toDist = 0;
 
     for (const point of this.points) {
       let smallestDist = 99999;
@@ -99,24 +119,20 @@ export class HomeComponent {
         const dy = follow.y - point.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
 
-        if (Math.random() * dist < smallestDist) {
+        if (dist < smallestDist) {
           smallestDist = dist;
-          toX = follow.x;
-          toY = follow.y;
+          toDx = dx
+          toDy = dy;
+          toDist = dist;
         };
 
       };
 
-      const dx = toX - point.x;
-      const dy = toY - point.y;
+      const ux = toDx / toDist;
+      const uy = toDy / toDist;
 
-      const dist = Math.sqrt(dx*dx + dy*dy);
-
-      const ux = dx / dist;
-      const uy = dy / dist;
-
-      const movedX = point.x - uy;
-      const movedY = point.y + ux;
+      const movedX = point.x + ux * (Math.cos(Math.PI * 2 / ux ));
+      const movedY = point.y + uy * (Math.cos(Math.PI * 2 / uy ));
       newPoints.push({x: movedX, y: movedY});
     };
 
@@ -124,9 +140,10 @@ export class HomeComponent {
   }
 
   changeDirection() {
-    interval(10000).subscribe(_ => {
-      this.direction *= -.1;
-      this.rotation += 1;
+    interval(20000).subscribe(_ => {
+      this.direction *= -1;
+      this.rotation += 1000;
+      this.randomVar = Math.random();
 
       this.moveAttractor(this.followArray);
     });
@@ -134,7 +151,7 @@ export class HomeComponent {
 
   moveAttractor(followArray: Array<{ x: number, y: number }>) {
     const newFollowArray: Array<{ x: number, y: number }> = [];
-    for (var j = 0; j < followArray.length; j++) {
+    for (var j = 0; j < Math.random() * 100; j++) {
       const newFollowX = Math.random() * 2000;
       const newFollowY = Math.random() * 1000;
 
@@ -148,12 +165,29 @@ export class HomeComponent {
     setTimeout(()=> {
       requestAnimationFrame(this.animateGrid.bind(this));
 
+      this.context2.canvas.width = this.width;
+      this.context2.canvas.height = this.height;
+
       this.context2.clearRect(0, 0, this.context2.canvas.width, this.context2.canvas.height);
       for (const point of this.points) {
         if ((point.x <= this.context2.canvas.width) && (point.y <= this.context2.canvas.height)) {
-          this.context2.fillStyle = `rgb(200 200 200 / ${100/(point.x/point.y)}%)`;
+          this.context2.fillStyle = `rgb(255 255 255 / ${60}%)`;
+
+          /*/(point.x/point.y)
+          this.context2.beginPath();
+          this.context2.arc(point.x,point.y, Math.random() * 3, 0, Math.PI * 2, false);
+          this.context2.fill();
+          this.context2.closePath(); */
+
           this.context2.fillRect(point.x, point.y, 1, 1);
         }
+
+      }
+      for (const vortex of this.followArray) {
+        this.context2.beginPath();
+        this.context2.arc(vortex.x, vortex.y, 10, 0, Math.PI * 2, false);
+        this.context2.stroke();
+        this.context2.closePath();
 
       }
     }
@@ -166,25 +200,28 @@ export class HomeComponent {
   animateSineWave(word: string) {
     setTimeout(()=> {
       requestAnimationFrame(this.animateSineWave.bind(this, word));
-      this.context.strokeStyle = '#8b8b8b';
+      this.context.strokeStyle = 'white';
       this.n = this.context.canvas.width;
       this.context.save();
       this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
       this.context.beginPath();
       for (var x = 0; x < this.n; x ++) {
-        var y = 450 * (this.context.canvas.width / (10000-this.appearVarY)) * Math.sin(40000/this.appearVarX / this.amplitude * x);
-        this.context.lineTo(x-20, y + 60);
+        var y =  x * this.appearVarX * Math.cos(Math.random() * 20);
+        this.context.lineTo(x, y);
       }
       this.context.closePath();
       this.context.clip();
-      this.context.font = "80px arial";
-      this.context.fillStyle = "#8b8b8b";
-      this.context.fillText(word, 0, 80);
+      this.context.font = "80px helvetica";
+      this.context.fillStyle = "white";
+      /*this.context.fillText(word, 0, 80);*/
       this.context.restore();
+      this.context.font = "80px helvetica";
+      this.context.fillStyle = "white";
+      this.context.fillText(word, 0, 80);
+      this.appearVarX += (this.direction + 5);
+      this.appearVarY += (this.direction * 1)
     }
     , 70);
-  this.appearVarX = (this.appearVarX + 5) % (2000);
-  this.appearVarY = (this.appearVarY + 100) % (10000);
   }
 
 
@@ -192,6 +229,9 @@ export class HomeComponent {
   handleMousemove($event: MouseEvent) {
     this.amplitude = this.context.canvas.width / $event.clientX;
     this.frequency = this.context.canvas.height / $event.clientY;
+    if (Math.round($event.clientX) === 500) {
+      console.log("popup");
+    }
   };
 
 }

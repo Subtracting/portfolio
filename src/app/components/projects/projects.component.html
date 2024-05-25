@@ -1,1 +1,9 @@
-<p>projects works!</p>
+<ul class="project-list">
+  <li class="project-item" *ngFor="let project of projects" (click)="toggleDetails(project)">
+    <h3 class="project-title">{{ project.title }}</h3>
+    <div class="project-details" *ngIf="project.showDetails">
+      <p>{{ project.description }}</p>
+      <p>Tags: <span *ngFor="let tag of project.tags">{{ tag }} </span></p>
+    </div>
+  </li>
+</ul>
